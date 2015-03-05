@@ -38,6 +38,7 @@ app.use(passport.session()); // Important that this is used after session
 require('./config/passport')(passport);
 
 app.use('/', require('./routes/user')(passport));
+app.use('/', require('./routes/documents')());
 
 require('node-pow')('marktexx', 3000);
 
