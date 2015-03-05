@@ -3,11 +3,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var passport = require('passport');
+var MongoStore = require('connect-mongo')(session);
+
 var app = express();
 
 // MongoDB (mongoose)
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+var mongoUrl = 'mongodb://localhost/test';
+mongoose.connect(mongoUrl);
 
 // Passport
 app.set('view engine', 'jade');
@@ -15,7 +19,8 @@ app.set('view engine', 'jade');
 app.use(cookieParser());
 app.use(session({
   secret: 'helloworld',
-  cookie: { domain: '.marktexx.dev' }
+  cookie: { domain: '.marktexx.dev' },
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -26,9 +31,8 @@ app.use(require('cors')({
   origin: 'http://www.marktexx.dev',
   credentials: true
 }));
-var passport = require('passport');
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // Important that this is used after session
 
 
 require('./config/passport')(passport);
