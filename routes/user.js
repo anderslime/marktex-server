@@ -1,9 +1,35 @@
 var express = require('express');
 var router = express.Router();
+var User = require('../models/user');
+
+var isLoggedIn = function(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.redirect('/');
+};
 
 /* GET users listing. */
-router.get('/', function(req, res) {
-  res.send('respond with a resource');
-});
+module.exports = function(passport) {
+  router.get('/users', function(req, res) {
+    User.find({}, function(e, users) {
+      if (e) res.send("No way");
+      res.send(JSON.stringify(users));
+    });
+  });
 
-module.exports = router;
+  router.get('/auth/facebook',
+    passport.authenticate('facebook', { scope: 'email' })
+  );
+
+  router.get('/auth/facebook/callback',
+    passport.authenticate('facebook', {
+      failureRedirect: '/',
+      successRedirect: '/'
+    })
+  );
+
+  router.get('/profile', isLoggedIn, function(req, res) {
+    res.send(JSON.stringify(req.user));
+  });
+
+  return router
+}
