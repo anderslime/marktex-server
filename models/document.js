@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var documentSchema = mongoose.Schema({
   doc_id: String,
+  name: String,
   creator_id: String,
   permitted_user_ids: [String]
 });

@@ -29,7 +29,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(require('cors')({
   origin: 'http://www.marktexx.dev',
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST']
 }));
 app.use(passport.initialize());
 app.use(passport.session()); // Important that this is used after session

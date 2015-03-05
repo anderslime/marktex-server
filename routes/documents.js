@@ -1,4 +1,5 @@
 var express = require('express');
+var generateUUID = require('node-uuid').v4;
 
 var router = express.Router();
 
@@ -15,6 +16,19 @@ module.exports = function() {
       if (error) throw error;
       res.send(JSON.stringify(documents));
     });
+  });
+
+  router.post('/docs', isLoggedIn, function(req, res) {
+    var currentUser = req.user;
+    console.log(req.body);
+    res.send("ok");
+    // Document.create({
+    //   creator_id: currentUser.id,
+    //   permitted_user_ids: [currentUser.id],
+    //   doc_id: generateUUID()
+    // }, function(error, document) {
+    //   if (error) throw error;
+    // });
   });
 
   return router;
