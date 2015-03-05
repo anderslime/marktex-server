@@ -8,7 +8,7 @@ module.exports = function(passport) {
     done(null, user.id);
   });
 
-  passport.deserializeUser(function(user, done) {
+  passport.deserializeUser(function(id, done) {
     User.findById(id, function(error, user) {
       done(error, user);
     });
@@ -26,8 +26,8 @@ module.exports = function(passport) {
           console.log(profile);
           newUser.facebook.id = profile.id;
           newUser.facebook.token = token;
-          newUser.facebook.name = profile.name.givenName;
-          newUser.facebook.email = profile.email;
+          newUser.facebook.name = profile.displayName;
+          newUser.facebook.email = profile.emails[0].value;
           newUser.save(function(error) {
             if (error) throw error;
             return done(null, newUser);

@@ -10,19 +10,26 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test');
 
 // Passport
-var passport = require('passport');
-app.use(passport.initialize());
-app.use(passport.session());
-
 app.set('view engine', 'jade');
 
-app.use(session({ secret: 'super secret secret' }));
+app.use(cookieParser());
+app.use(session({
+  secret: 'helloworld',
+  cookie: { domain: '.marktexx.dev' }
+}));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(cookieParser());
+app.use(require('cors')({
+  origin: 'http://www.marktexx.dev',
+  credentials: true
+}));
+var passport = require('passport');
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 require('./config/passport')(passport);
 

@@ -4,7 +4,7 @@ var User = require('../models/user');
 
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) return next();
-  res.redirect('/');
+  res.status(401);
 };
 
 /* GET users listing. */
@@ -16,14 +16,21 @@ module.exports = function(passport) {
     });
   });
 
+  router.get('/me', isLoggedIn, function(req, res) {
+    var user = req.user;
+    res.send(JSON.stringify({
+      name: user.facebook.name
+    }));
+  });
+
   router.get('/auth/facebook',
     passport.authenticate('facebook', { scope: 'email' })
   );
 
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-      failureRedirect: '/',
-      successRedirect: '/'
+      failureRedirect: 'http://www.marktexx.dev',
+      successRedirect: 'http://www.marktexx.dev'
     })
   );
 
