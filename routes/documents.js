@@ -35,10 +35,10 @@ module.exports = function() {
   router.put('/docs/:doc_id/permitted_users/:permitted_user_id', isLoggedIn, function(req, res) {
     console.log(req.params);
     var doc_id = req.params('doc_id');
-    Document.docPermittedFor(doc_id, req.user.id, function(error, document) {
+    Document.docPermittedFor(doc_id, req.user.id, function(error, doc) {
       if (error) throw error;
-      if (document) {
-        Document.addPermissionTo(doc_id, req.params('permitted_user_id'), function(
+      if (doc) {
+        console.log("document yeah");
       } else {
         res.send(403);
       }
