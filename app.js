@@ -18,8 +18,7 @@ app.set('view engine', 'jade');
 
 app.use(cookieParser());
 app.use(session({
-  secret: 'helloworld',
-  // cookie: { domain: 'localhost' },
+  secret: 'b8092a4014b44731159420429560d41c7428d2e8a625ae0e48b0de2c895fce53ff',
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(logger('dev'));
