@@ -25,7 +25,6 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-develop": "~0.4.0",
     "load-grunt-tasks": "~2.0.0",
-    "node-pow": "0.0.2",
     "request": "~2.51.0",
     "time-grunt": "~1.0.0"
   }
