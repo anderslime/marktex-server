@@ -8,6 +8,7 @@ var Document = require('../models/document');
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.status(401);
+  res.send({ error: "You haven't logged in yet" });
 };
 
 module.exports = function() {
@@ -29,19 +30,6 @@ module.exports = function() {
     }, function(error, document) {
       if (error) throw error;
       res.send(JSON.stringify(document));
-    });
-  });
-
-  router.put('/docs/:doc_id/permitted_users/:permitted_user_id', isLoggedIn, function(req, res) {
-    console.log(req.params);
-    var doc_id = req.params('doc_id');
-    Document.docPermittedFor(doc_id, req.user.id, function(error, doc) {
-      if (error) throw error;
-      if (doc) {
-        console.log("document yeah");
-      } else {
-        res.send(403);
-      }
     });
   });
 
