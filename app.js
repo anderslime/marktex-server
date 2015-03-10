@@ -19,7 +19,7 @@ app.set('view engine', 'jade');
 app.use(cookieParser());
 app.use(session({
   secret: 'helloworld',
-  cookie: { domain: '.marktexx.dev' },
+  // cookie: { domain: 'localhost' },
   store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 app.use(logger('dev'));
@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(require('cors')({
-  origin: 'http://www.marktexx.dev',
+  origin: 'http://localhost:9000',
   credentials: true
 }));
 app.use(passport.initialize());
@@ -38,6 +38,7 @@ app.use(passport.session()); // Important that this is used after session
 require('./config/passport')(passport);
 
 app.use('/', require('./routes/user')(passport));
+app.use('/', require('./routes/documents')());
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

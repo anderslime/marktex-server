@@ -5,11 +5,12 @@ var User = require('../models/user');
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) return next();
   res.status(401);
+  res.send("no way");
 };
 
 /* GET users listing. */
 module.exports = function(passport) {
-  router.get('/users', function(req, res) {
+  router.get('/users', isLoggedIn, function(req, res) {
     User.find({}, function(e, users) {
       if (e) res.send("No way");
       res.send(JSON.stringify(users));
@@ -29,8 +30,8 @@ module.exports = function(passport) {
 
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-      failureRedirect: 'http://www.marktexx.dev',
-      successRedirect: 'http://www.marktexx.dev'
+      failureRedirect: 'http://localhost:9000',
+      successRedirect: 'http://localhost:9000'
     })
   );
 
