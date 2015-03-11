@@ -5,12 +5,13 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var passport = require('passport');
 var MongoStore = require('connect-mongo')(session);
+var config = require('./tmp/config');
 
 var app = express();
 
 // MongoDB (mongoose)
 var mongoose = require('mongoose');
-var mongoUrl = 'mongodb://localhost/test';
+var mongoUrl = config.mongoURL;
 mongoose.connect(mongoUrl);
 
 // Passport
@@ -28,15 +29,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(require('cors')({
-  origin: 'http://localhost:9000',
-  credentials: true
-}));
+app.use(require('cors')({ origin: config.cors, credentials: true }));
 app.use(passport.initialize());
 app.use(passport.session()); // Important that this is used after session
 
 
-require('./config/passport')(passport);
+require('./config/passport')(passport, config.facebook)
 
 app.use('/', require('./routes/user')(passport));
 app.use('/', require('./routes/documents')());
