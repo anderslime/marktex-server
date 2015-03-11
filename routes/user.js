@@ -20,6 +20,7 @@ module.exports = function(passport) {
   router.get('/me', isLoggedIn, function(req, res) {
     var user = req.user;
     res.send(JSON.stringify({
+      id: user._id,
       name: user.facebook.name
     }));
   });
