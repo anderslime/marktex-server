@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
+var config = require('../tmp/config');
 
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) return next();
@@ -31,8 +32,8 @@ module.exports = function(passport) {
 
   router.get('/auth/facebook/callback',
     passport.authenticate('facebook', {
-      failureRedirect: 'http://localhost:9000',
-      successRedirect: 'http://localhost:9000'
+      failureRedirect: config.urls.editor,
+      successRedirect: config.urls.editor
     })
   );
 
