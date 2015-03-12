@@ -24,11 +24,11 @@ module.exports = function() {
     var name = req.body.title || 'Undefined';
     Document.create({
       creator_id: currentUser.id,
-      title: title,
+      name: name,
       permitted_user_ids: [currentUser.id]
     }, function(error, doc) {
       if (error) throw error;
-      res.send(document);
+      res.send(doc);
     });
   });
 

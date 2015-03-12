@@ -3,7 +3,7 @@ var ObjectId = mongoose.Types.ObjectId;
 var isValidObjectId = mongoose.Types.ObjectId.isValid;
 
 var documentSchema = mongoose.Schema({
-  title: { type: String, required: true },
+  name: { type: String, required: true },
   creator_id: { type: String, required: true },
   permitted_user_ids: { type: [String], required: true }
 });
