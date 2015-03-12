@@ -14,7 +14,17 @@ var mongoose = require('mongoose');
 var mongoUrl = config.mongoURL;
 mongoose.connect(mongoUrl);
 
-// Passport
+// Opbeat
+
+if (config.opbeat) {
+  var opbeat = require('opbeat')({
+    organizationId: config.opbeat.organizationId,
+    appId: config.opbeat.appId,
+    secretToken: config.opbeat.secretToken,
+    active: process.env['NODE_ENV'] == 'production'
+  });
+}
+
 app.set('view engine', 'jade');
 
 app.use(cookieParser());
