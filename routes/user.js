@@ -4,16 +4,18 @@ var User = require('../models/user');
 var config = require('../tmp/config');
 
 var isLoggedIn = function(req, res, next) {
-  if (req.isAuthenticated()) return next();
-  res.status(401);
-  res.send("no way");
+  if (req.isAuthenticated())
+    return next();
+  res.status(401).done();
 };
 
 /* GET users listing. */
 module.exports = function(passport) {
   router.get('/users', isLoggedIn, function(req, res) {
     User.find({}, function(e, users) {
-      if (e) res.send("No way");
+      if (e)
+        res.status(500).done(); //500 might not be the best option here
+
       res.send(JSON.stringify(users));
     });
   });

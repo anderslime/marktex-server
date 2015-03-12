@@ -16,17 +16,19 @@ module.exports = function(passport, authConfig) {
   var facebookCallback = function(token, refreshToken, profile, done) {
     process.nextTick(function() {
       User.findOne({ 'facebook.id': profile.id }, function(error, user) {
-        if (error) return done(error);
-        if (user) {
-          return done(null, user)
-        } else {
+        if (error)
+          return done(error);
+        if (user)
+          return done(null, user);
+        else {
           var newUser = new User();
           newUser.facebook.id = profile.id;
           newUser.facebook.token = token;
           newUser.facebook.name = profile.displayName;
           newUser.facebook.email = profile.emails[0].value;
           newUser.save(function(error) {
-            if (error) throw error;
+            if (error)
+              throw error;
             return done(null, newUser);
           });
         }

@@ -15,7 +15,7 @@ module.exports = function() {
   router.get('/docs', isLoggedIn, function(req, res) {
     Document.findPermittedForUser(req.user.id, function(error, documents) {
       if (error) throw error;
-      res.send(JSON.stringify(documents));
+      res.send(documents);
     });
   });
 
@@ -29,7 +29,7 @@ module.exports = function() {
       doc_id: generateUUID()
     }, function(error, document) {
       if (error) throw error;
-      res.send(JSON.stringify(document));
+      res.send(document);
     });
   });
 
