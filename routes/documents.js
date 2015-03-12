@@ -47,6 +47,19 @@ module.exports = function() {
     });
   });
 
+  router.delete('/docs/:docId', isLoggedIn, function(req, res) {
+    var currentUser = req.user;
+    var docId = req.params.docId;
+    Document.removeIfPermitted(docId, currentUser.id, function(error, isRemoved) {
+      if (error) throw error;
+      if (isRemoved) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    });
+  });
+
   return router;
 }
 
