@@ -23,9 +23,9 @@ module.exports = function() {
     var currentUser = req.user;
     var name = req.body.title || 'Undefined';
     Document.create({
-      creator_id: currentUser.id,
+      creatorId: currentUser.id,
       name: name,
-      permitted_user_ids: [currentUser.id]
+      permittedUserIds: [currentUser.id]
     }, function(error, doc) {
       if (error) throw error;
       res.send(doc);
