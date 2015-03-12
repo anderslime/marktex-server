@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var timestamps = require('mongoose-timestamps');
+
 var ObjectId = mongoose.Types.ObjectId;
 var isValidObjectId = mongoose.Types.ObjectId.isValid;
 
@@ -19,5 +21,8 @@ documentSchema.statics.findPermittedDocForUser = function(doc_id, user_id, cb) {
     cb(null, null);
   }
 };
+
+// Add timestamps createdAt and updatedAt to all documents
+documentSchema.plugin(timestamps);
 
 module.exports = mongoose.model('Document', documentSchema);
