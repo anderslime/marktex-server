@@ -6,7 +6,7 @@ var config = require('../tmp/config');
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated())
     return next();
-  res.status(401).done();
+  res.status(401).end();
 };
 
 /* GET users listing. */
