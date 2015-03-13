@@ -47,6 +47,21 @@ module.exports = function() {
     });
   });
 
+  router.put('/docs/:docId', isLoggedIn, function(req, res) {
+    var data = { name: req.body.name };
+    var currentUser = req.user;
+    var docId = req.params.docId;
+    Document.updateIfPermitted(docId, currentUser.id, data, function(error, doc) {
+      if (error) throw error;
+      if (doc) {
+        console.log(doc.name);
+        res.send(doc);
+      } else {
+        res.status(404).end();
+      }
+    });
+  });
+
   router.delete('/docs/:docId', isLoggedIn, function(req, res) {
     var currentUser = req.user;
     var docId = req.params.docId;

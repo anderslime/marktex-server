@@ -30,6 +30,18 @@ documentSchema.statics.removeIfPermitted = function(docId, userId, cb) {
   }
 };
 
+documentSchema.statics.updateIfPermitted = function(docId, userId, data, cb) {
+  if (isValidObjectId(docId)) {
+    this.findOneAndUpdate(
+      { _id: new ObjectId(docId), permittedUserIds: userId },
+      data,
+      cb
+    );
+  } else {
+    cb(null, null);
+  }
+};
+
 // Add timestamps createdAt and updatedAt to all documents
 documentSchema.plugin(timestamps);
 
