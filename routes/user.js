@@ -11,15 +11,6 @@ var isLoggedIn = function(req, res, next) {
 
 /* GET users listing. */
 module.exports = function(passport) {
-  router.get('/users', isLoggedIn, function(req, res) {
-    User.find({}, function(e, users) {
-      if (e)
-        res.status(500).done(); //500 might not be the best option here
-
-      res.send(JSON.stringify(users));
-    });
-  });
-
   router.get('/me', isLoggedIn, function(req, res) {
     var user = req.user;
     res.send(JSON.stringify({
