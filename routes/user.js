@@ -34,5 +34,11 @@ module.exports = function(passport) {
     res.send(JSON.stringify(req.user));
   });
 
+  router.get('/logout', isLoggedIn, function(req, res) {
+    console.log('clear cookie');
+    res.clearCookie('connect.sid', { path: '/' });
+    res.redirect(config.urls.editor);
+  });
+
   return router
 }
