@@ -19,16 +19,19 @@ var userSchema = mongoose.Schema({
 var documentSchema = mongoose.Schema({
   name: { type: String, required: true },
   creatorId: { type: String, required: true },
-  permittedUsers: { type: [userSchema], required: true }
+  creatorName: { type: String, required: true },
+  permittedUsers: { type: [userSchema], required: false }
 });
 
+var permittedQuery = function(user_id){ return { '$or': [{ creatorId: user_id }, { 'permittedUsers._id': new ObjectId(user_id) }]}; };
+
 documentSchema.statics.findPermittedDocsForUser = function(user_id, cb) {
-  this.find({ 'permittedUsers._id': new ObjectId(user_id) }).sort('-createdAt').exec(cb);
+  this.find(permittedQuery(user_id)).sort('-createdAt').exec(cb);
 };
 
 documentSchema.statics.findPermittedDocForUser = function(doc_id, user_id, cb) {
   if (isValidObjectId(doc_id)) {
-    this.findOne({ _id: new ObjectId(doc_id), 'permittedUsers._id': new ObjectId(user_id) }, cb);
+    this.findOne(permittedQuery(user_id), cb);
   } else {
     cb(null, null);
   }
@@ -36,7 +39,7 @@ documentSchema.statics.findPermittedDocForUser = function(doc_id, user_id, cb) {
 
 documentSchema.statics.removeIfPermitted = function(docId, user_id, cb) {
   if (isValidObjectId(docId)) {
-    this.remove({ _id: new ObjectId(docId), 'permittedUsers._id': new ObjectId(user_id) }, cb);
+    this.remove(permittedQuery(user_id), cb);
   } else {
     cb(null, null);
   }
@@ -45,7 +48,7 @@ documentSchema.statics.removeIfPermitted = function(docId, user_id, cb) {
 documentSchema.statics.updateIfPermitted = function(docId, user_id, data, cb) {
   if (isValidObjectId(docId)) {
     this.findOneAndUpdate(
-      { _id: new ObjectId(docId), 'permittedUsers._id': new ObjectId(user_id) },
+      { '$and': [{_id: new ObjectId(docId)}, permittedQuery(user_id)] },
       {'$set':
         {
           name: data.name,

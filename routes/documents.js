@@ -25,8 +25,9 @@ module.exports = function() {
     var name = req.body.title || 'Undefined';
     Document.create({
       creatorId: currentUser.id,
+      creatorName: currentUser.facebook.name,
       name: name,
-      permittedUsers: [currentUser]
+      permittedUsers: []
     }, function(error, doc) {
       if (error) throw error;
       res.send(doc);
@@ -51,10 +52,6 @@ module.exports = function() {
   router.put('/docs/:docId', isLoggedIn, function(req, res) {
     var currentUser = req.user;
     var docId = req.params.docId;
-
-    //ensure user does not remove himself form permitted users
-    if(!req.body.permittedUsers.filter(function(u){ return u._id === currentUser.id}).length)
-      req.body.permittedUsers.push(currentUser);
 
     Document.updateIfPermitted(docId, currentUser.id, req.body, function(error, doc) {
       if (error) throw error;
