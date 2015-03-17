@@ -9,4 +9,8 @@ var userSchema = mongoose.Schema({
   }
 });
 
+userSchema.statics.findUsersByFacebookIds = function(fbIds, cb){
+	this.find({'facebook.id': { $in: fbIds}}).exec(cb);
+};
+
 module.exports = mongoose.model('User', userSchema);

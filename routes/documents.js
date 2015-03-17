@@ -4,6 +4,7 @@ var generateUUID = require('node-uuid').v4;
 var router = express.Router();
 
 var Document = require('../models/document');
+var User = require('../models/user');
 
 var isLoggedIn = function(req, res, next) {
   if (req.isAuthenticated()) return next();
@@ -25,7 +26,7 @@ module.exports = function() {
     Document.create({
       creatorId: currentUser.id,
       name: name,
-      permittedUserIds: [currentUser.id]
+      permittedUsers: [currentUser]
     }, function(error, doc) {
       if (error) throw error;
       res.send(doc);
@@ -48,13 +49,16 @@ module.exports = function() {
   });
 
   router.put('/docs/:docId', isLoggedIn, function(req, res) {
-    var data = { name: req.body.name };
     var currentUser = req.user;
     var docId = req.params.docId;
-    Document.updateIfPermitted(docId, currentUser.id, data, function(error, doc) {
+
+    //ensure user does not remove himself form permitted users
+    if(!req.body.permittedUsers.filter(function(u){ return u._id === currentUser.id}).length)
+      req.body.permittedUsers.push(currentUser);
+
+    Document.updateIfPermitted(docId, currentUser.id, req.body, function(error, doc) {
       if (error) throw error;
       if (doc) {
-        console.log(doc.name);
         res.send(doc);
       } else {
         res.status(404).end();

@@ -13,10 +13,22 @@ var isLoggedIn = function(req, res, next) {
 module.exports = function(passport) {
   router.get('/me', isLoggedIn, function(req, res) {
     var user = req.user;
-    res.send(JSON.stringify({
+    res.send({
       id: user._id,
       name: user.facebook.name
-    }));
+    });
+  });
+
+  router.post('/facebookIdsToUsers', isLoggedIn, function(req, res) {
+    var user = req.user;
+
+    var users = User.findUsersByFacebookIds(req.body.facebookIds, function(error, users){
+      //do not wave around other users tokens
+      users.forEach(function(u,i){
+        u.facebook.token = undefined;
+      })
+      res.send(users);
+    });
   });
 
   router.get('/auth/facebook',
@@ -31,11 +43,10 @@ module.exports = function(passport) {
   );
 
   router.get('/profile', isLoggedIn, function(req, res) {
-    res.send(JSON.stringify(req.user));
+    res.send(req.user);
   });
 
   router.get('/logout', isLoggedIn, function(req, res) {
-    console.log('clear cookie');
     res.clearCookie('connect.sid', { path: '/' });
     res.redirect(config.urls.editor);
   });
