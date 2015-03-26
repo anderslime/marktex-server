@@ -26,7 +26,7 @@ module.exports = function(passport) {
       //do not wave around other users tokens
       users.forEach(function(u,i){
         u.facebook.token = undefined;
-      })
+      });
       res.send(users);
     });
   });
