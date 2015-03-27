@@ -2,12 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var config = require('../tmp/config');
-
-var isLoggedIn = function(req, res, next) {
-  if (req.isAuthenticated())
-    return next();
-  res.status(401).end();
-};
+var isLoggedIn = require('../middleware/is_logged_in');
 
 /* GET users listing. */
 module.exports = function(passport) {
