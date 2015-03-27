@@ -18,20 +18,21 @@ module.exports = function(passport, authConfig) {
       User.findOne({ 'facebook.id': profile.id }, function(error, user) {
         if (error)
           return done(error);
-        if (user)
-          return done(null, user);
-        else {
-          var newUser = new User();
-          newUser.facebook.id = profile.id;
-          newUser.facebook.token = token;
-          newUser.facebook.name = profile.displayName;
-          newUser.facebook.email = profile.emails[0].value;
-          newUser.save(function(error) {
-            if (error)
-              throw error;
-            return done(null, newUser);
-          });
+
+        if (user) {
+          var thisUser = user;
+        } else {
+          var thisUser = new User();
+          thisUser.facebook.id = profile.id;
         }
+        thisUser.facebook.token = token;
+        thisUser.facebook.name = profile.displayName;
+        thisUser.facebook.email = profile.emails[0].value;
+        thisUser.save(function(error) {
+          if (error)
+            throw error;
+          return done(null, thisUser);
+        });
       });
     });
   };
