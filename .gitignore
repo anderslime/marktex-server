@@ -3,3 +3,4 @@ public/components
 .sass-cachetmp
 tmp/*
 .env
+.settings/
